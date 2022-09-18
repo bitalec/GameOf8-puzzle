@@ -13,7 +13,7 @@ int main (void){
     fine = risolto2(table);
     stampa(table);
     
-    while(fine == 0){
+    while(!fine){
         printf("\nQuale numero vuoi spostare?: ");
         scanf("%i", &mossa);
 
@@ -21,13 +21,13 @@ int main (void){
             muovi(table,mossa);
             printf("\n");
             stampa(table);
+            fine = risolto2(table);
         }
         else{
             printf("La mossa inserita non è valida, riprova\n");
         }
 
-        fine = risolto2(table);
-        printf("\n%i", fine);
+        
         
     }
     printf("Complimenti Hai completato il gioco");
