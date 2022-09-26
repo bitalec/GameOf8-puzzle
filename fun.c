@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "time.h"
+#include <ncurses.h>
 #define DIM 3
 
 
@@ -31,12 +32,14 @@ void stampa(int **gioco, int size){
     for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
                 if(gioco[i][j] == 0 )
-                    printf("%2c ", ' ');
+                    printw("%2c ", ' ');
                 else    
-                    printf("%2i ", gioco[i][j]);
+                    printw("%2i ", gioco[i][j]);
             }
-        printf("\n");
+        printw("\n");
+
     }
+    refresh();
 }
 
 
@@ -184,7 +187,7 @@ void swap(int **gioco, int size){
     for(int i = 0; i < size; i++){
         for(int j = 0; j < size; j++){
             support[k] = gioco[i][j];
-            //printf("%i", support[k]);
+            //printw("%i", support[k]);
             k++;
         }
     }
@@ -203,7 +206,7 @@ void swap(int **gioco, int size){
         }
     }
 
-    printf("numero permutazioni :%i\n", count);
+    printw("numero permutazioni :%i\n", count);
 
     free(support);
     //se il numero non è pari allora il gioco non è risolvibile, rilancio la funzione

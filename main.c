@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "fun.h"
 #include "fun.c"
+#include <ncurses.h>
 
 
 int main (void){
@@ -13,33 +14,43 @@ int main (void){
     
     int fine;
     
+    initscr();
+    raw();
+    cbreak();
 
-    printf("*******BENVENUTO NEL GIOCO DEL 15*********\n\n\n");
+    printw("*******BENVENUTO NEL GIOCO DEL 15*********\n\n\n");
     fine = risolto2(table,3);
     stampa(table,3);
     
     //finchè fine è diverso da 0 il gioco non è finito quindi cicla
     while(!fine){
-        printf("\nQuale numero vuoi spostare?: ");
-        scanf("%i", &mossa);
+        printw("\nQuale numero vuoi spostare?: ");
+        refresh();
+        scanw("%i", &mossa);
 
         if(valida(table,mossa)){
             muovi(table,mossa);
-            printf("\n");
+            
+            clear();
+            printw("\n");
+            
             stampa(table,3);
             fine = risolto2(table,3);
+            
         }
         else{
-            printf("La mossa inserita non è valida, riprova\n");
+            
+            clear();
+            printw("La mossa inserita non è valida, riprova\n");
             stampa(table,3);
         }
 
         
         
     }
-    printf("Complimenti Hai completato il gioco");
+    printw("Complimenti Hai completato il gioco");
 
-
+    endwin();
 return 0;
 }
 
