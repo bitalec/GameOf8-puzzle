@@ -27,19 +27,22 @@ void muovi(int **gioco, int mossa){
 
 }
 
-void stampa(int **gioco, int size){
+//stampa la tabella nella finestra new_win
+void stampa(int **gioco, int size, WINDOW * new_win){
 
     for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
                 if(gioco[i][j] == 0 )
-                    printw("%2c ", ' ');
+                    wprintw(new_win,"%2c ", ' ');
                 else    
-                    printw("%2i ", gioco[i][j]);
+                    wprintw(new_win,"%2i ", gioco[i][j]);
+
+                
             }
-        printw("\n");
+        wprintw(new_win,"\n");
 
     }
-    refresh();
+    //wrefresh(new_win);
 }
 
 
@@ -110,7 +113,6 @@ int risolto2(int **gioco, int size){
 
 int ** random_game3(int size){
 
-    
 
     const int possibilità = 9;
 
@@ -120,9 +122,11 @@ int ** random_game3(int size){
     
     //genero dinamicamente un'array bidimensionale
     int **gioco = (int **)malloc(sizeof(int*) * size);
-    for(int i = 0; i < size; i++)
+    checkmalloc(gioco);
+    for(int i = 0; i < size; i++){
         gioco[i] = (int*)malloc(sizeof(int) * size); 
-
+        //checkmalloc(gioco[i]);
+    }
     
     //inizializzo l'array alla posizione base
     int k = 1;
@@ -187,7 +191,7 @@ void swap(int **gioco, int size){
     for(int i = 0; i < size; i++){
         for(int j = 0; j < size; j++){
             support[k] = gioco[i][j];
-            //printw("%i", support[k]);
+            //wprintw("%i", support[k]);
             k++;
         }
     }
@@ -206,10 +210,24 @@ void swap(int **gioco, int size){
         }
     }
 
-    printw("numero permutazioni :%i\n", count);
+    //wprintw("numero permutazioni :%i\n", count);
 
     free(support);
     //se il numero non è pari allora il gioco non è risolvibile, rilancio la funzione
     if(count % 2 != 0 || count == 0)
         swap(gioco,size);
+}
+
+void checkmalloc(int **gioco){
+
+    if(gioco != NULL)
+        return;
+    else{    
+        
+        printw("memoria non allocata");
+        refresh();
+        getch();
+        return exit(1);
+        
+    }
 }
