@@ -30,8 +30,7 @@ void muovi(int **gioco, int mossa){
 
 }
 
-//
-//salva la posizione del numero che si vuole spostare nelle variabili globali colmossa e rigamossa
+
 int convertimossa(int **gioco, int mossa){
 
     switch(mossa){
@@ -61,7 +60,6 @@ int convertimossa(int **gioco, int mossa){
 
 }
 
-//stampa la tabella nella finestra new_win
 void stampa(int **gioco, int size, WINDOW * new_win){
 
     for(int i = 0; i < size; i++){
@@ -101,7 +99,6 @@ void search_zero(int **gioco,int size){
 
 }
 
-
 int valida(int **gioco, int mossa,int size){
     
     switch(mossa){
@@ -130,7 +127,6 @@ int valida(int **gioco, int mossa,int size){
     return 0;
 
 }
-
 
 int risolto2(int **gioco, int size){
 
@@ -189,8 +185,6 @@ int ** random_game3(int size){
     return gioco;
     
 }
-
-
 
 void swap(int **gioco, int size){
 
