@@ -30,6 +30,7 @@ void muovi(int **gioco, int mossa){
 
 }
 
+//
 //salva la posizione del numero che si vuole spostare nelle variabili globali colmossa e rigamossa
 int convertimossa(int **gioco, int mossa){
 
