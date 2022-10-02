@@ -15,7 +15,6 @@ int main (void){
     
     //crea una matrice di dimensione 3x3
     int **table = random_game3(3);
-    
     int fine = 0;
     
     //inizio di ncurses
@@ -24,13 +23,13 @@ int main (void){
     cbreak(); //wgetch prende un solo carattere con questa funzione attiva
     echo(); //non stampa il carattere preso con getch
     
-    new_win = newwin(10,50,7,10);   //creo una nuova finestra
+    new_win = newwin(10,50,7,10);
+    //creo una nuova finestra
+    keypad(new_win, TRUE); //Abilita l'esecuzione dei tasti speciali
     
-    wprintw(new_win,"\n BENVENUTO NEL GIOCO DEL 8\n\n"); 
+    wprintw(new_win,"\n BENVENUTO NEL GIOCO DEL' 8\n\n"); 
     stampa(table,DIM,new_win);
-   
-    
-    
+    search_zero(table,DIM);
     //finchè fine è uguale a zero il gioco non è finito quindi cicla
     while(!fine){
         
@@ -38,12 +37,14 @@ int main (void){
         
         //crea un box
         box(new_win,0,0);
+        //cerca la posizione della casella vuota
+        
         
         //wgetch cattura il carattere ascii e restituisce il suo valore intero
-        // -48 per ricavare i numeri dall' 1 al 9
-        mossa = wgetch(new_win) - 48; 
-
-        if(valida(table,mossa)){
+        mossa = wgetch(new_win);
+        
+        
+        if(valida(table,mossa,DIM)){
             
             wclear(new_win); //pulisce la finestra
             muovi(table,mossa);
@@ -62,9 +63,6 @@ int main (void){
             stampa(table,3,new_win);
             wrefresh(new_win); // non ho capito bene a che serve refresh
         }
-
-        
-        
     }
     box(new_win,0,0);
     mvwprintw(new_win,7,1," Complimenti Hai completato il gioco");

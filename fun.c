@@ -20,10 +20,43 @@ struct pos_t{
 
 void muovi(int **gioco, int mossa){
         
-        gioco[posrigazero][poscolzero] = mossa;
+        
+        convertimossa(gioco,mossa);
+        
+        gioco[posrigazero][poscolzero] = gioco[rigamossa][colmossa];
         gioco[rigamossa][colmossa] = 0;
         poscolzero = colmossa;
         posrigazero = rigamossa;
+
+}
+
+//salva la posizione del numero che si vuole spostare nelle variabili globali colmossa e rigamossa
+int convertimossa(int **gioco, int mossa){
+
+    switch(mossa){
+
+        case KEY_UP:
+            rigamossa = posrigazero + 1;
+            colmossa = poscolzero;
+            break;
+        case KEY_DOWN:
+            rigamossa = posrigazero - 1;
+            colmossa = poscolzero;
+                break;
+        case KEY_RIGHT:
+            rigamossa = posrigazero;
+            colmossa = poscolzero - 1;
+                break;
+        case KEY_LEFT:
+            rigamossa = posrigazero;
+            colmossa = poscolzero + 1;
+                break;
+        default:
+            break;
+    
+    }
+
+    return mossa;
 
 }
 
@@ -45,9 +78,8 @@ void stampa(int **gioco, int size, WINDOW * new_win){
     //wrefresh(new_win);
 }
 
+void search_zero(int **gioco,int size){
 
-int valida(int **gioco, int mossa){
-    
     int libero = 1;
     
     //se posrigazero e poscolzero hanno valore -1 è la prima volta che lanciamo la funzione quindi ricerchiamo la posizione dello zero
@@ -64,26 +96,38 @@ int valida(int **gioco, int mossa){
             }
         }
     }
+
+
+}
+
+
+int valida(int **gioco, int mossa,int size){
     
+    switch(mossa){
+
+        case KEY_UP:
+            if(posrigazero < DIM - 1)
+                return 1;
+                break;
+        case KEY_DOWN:
+            if(posrigazero > 0)
+                return 1;
+                break;
+        case KEY_RIGHT:
+            if(poscolzero > 0)
+                return 1;
+                break;
+        case KEY_LEFT:
+            if(poscolzero < DIM - 1)
+                return 1;
+                break;
+        default:
+            break;
     
-    libero = 1;
-    //cerchiamo la posizione della mossa;
-    for(int i = 0; i < DIM && libero == 1; i++)
-        for(int j = 0; j < DIM && libero == 1; j++){
-            
-            if(gioco[i][j] == mossa ){
-                rigamossa = i;
-                colmossa = j;
-                libero = 0;
-            }
-        }
-    
-    if(rigamossa == posrigazero && (colmossa == poscolzero - 1 || colmossa == poscolzero + 1))
-        return 1;
-    else if((rigamossa == posrigazero - 1 || rigamossa == posrigazero + 1) && colmossa == poscolzero)
-        return 1;
-    else 
-        return 0;
+    }
+
+    return 0;
+
 }
 
 
@@ -113,19 +157,16 @@ int risolto2(int **gioco, int size){
 
 int ** random_game3(int size){
 
-
-    const int possibilità = 9;
-
-    int checknum[] = {1,1,1,1,1,1,1,1,1}; //array di supporto
-    int casualnum;
-    int flag = 0;
-    
     //genero dinamicamente un'array bidimensionale
     int **gioco = (int **)malloc(sizeof(int*) * size);
     checkmalloc(gioco);
+    
     for(int i = 0; i < size; i++){
         gioco[i] = (int*)malloc(sizeof(int) * size); 
-        //checkmalloc(gioco[i]);
+        if(gioco[i]==NULL){
+            printf("memoria non allocata");
+            exit(1);
+        }
     }
     
     //inizializzo l'array alla posizione base
@@ -139,7 +180,7 @@ int ** random_game3(int size){
 
     gioco[2][2] = 0;
 
-
+    
     swap(gioco, size);
 
 
@@ -155,8 +196,8 @@ void swap(int **gioco, int size){
     srand(time(NULL));
 
 
-    int *support = malloc(sizeof(int) * (size * size));  //array di supporto
-    
+    int *support = malloc(sizeof(int) * (size * size));
+    int count;
     struct pos_t first_casual_num, second_casual_num; //posizione dei numeri causali che andrò a generare
     int tmp;
 
@@ -184,9 +225,8 @@ void swap(int **gioco, int size){
 
     }
 
-    int count = 0;
+    
     int k = 0;
-
     //salvo la matrice in un array a 1D
     for(int i = 0; i < size; i++){
         for(int j = 0; j < size; j++){
@@ -198,8 +238,63 @@ void swap(int **gioco, int size){
 
     
 
-    int control1,control2;
+    count = n_permutazione(gioco,support, size);
 
+    while(count % 2 == 1){
+
+        do{
+                first_casual_num.c = rand() % size;
+                first_casual_num.r = rand() % size;
+
+                second_casual_num.c = rand() % size;
+                second_casual_num.r = rand() % size;
+            }while(first_casual_num.c == second_casual_num.c && first_casual_num.r  == second_casual_num.r);
+            
+
+            //swap 
+            tmp = gioco[second_casual_num.r][second_casual_num.c];
+            gioco[second_casual_num.r][second_casual_num.c] = gioco[first_casual_num.r][first_casual_num.c];
+            gioco[first_casual_num.r][first_casual_num.c] = tmp;
+
+            k = 0;
+            for(int i = 0; i < size; i++){
+                for(int j = 0; j < size; j++){
+                    support[k] = gioco[i][j];
+                    //wprintw("%i", support[k]);
+                    k++;
+                }
+            }
+
+
+
+            count = n_permutazione(gioco,support, size);
+    }
+    
+    //controllo che sia valida la scheda
+    printf("numero permutazione: %i", count);
+    getchar();
+    //wprintw("numero permutazioni :%i\n", count);
+    free(support);
+    
+}
+
+void checkmalloc(int **gioco){
+
+    if(gioco != NULL)
+        return;
+    else{    
+        
+        printf("memoria non allocata");
+        return exit(1);
+        
+    }
+}
+
+int n_permutazione(int **gioco, int *support, int size){
+
+    
+    int control1,control2;
+    int count = 0;
     //controllo la parità della permutazione e salvo il valore in count
     for(int i = 0; i < size * size; i++){
         control1 = support[i];
@@ -209,25 +304,5 @@ void swap(int **gioco, int size){
                 count++;
         }
     }
-
-    //wprintw("numero permutazioni :%i\n", count);
-
-    free(support);
-    //se il numero non è pari allora il gioco non è risolvibile, rilancio la funzione
-    if(count % 2 != 0 || count == 0)
-        swap(gioco,size);
-}
-
-void checkmalloc(int **gioco){
-
-    if(gioco != NULL)
-        return;
-    else{    
-        
-        printw("memoria non allocata");
-        refresh();
-        getch();
-        return exit(1);
-        
-    }
+    return count;
 }
