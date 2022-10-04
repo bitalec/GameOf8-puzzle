@@ -62,19 +62,37 @@ int convertimossa(int **gioco, int mossa){
 
 void stampa(int **gioco, int size, WINDOW * new_win){
 
-    for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
-                if(gioco[i][j] == 0 )
-                    wprintw(new_win,"%2c ", ' ');
-                else    
-                    wprintw(new_win,"%2i ", gioco[i][j]);
-
-                
+    int x,y; //position of numbers
+    int maxcol = (size * 2) - 1; //ad ogni numero associamo uno spazio
+    int maxriga = (size * 2) - 1;
+    int i = 0, j = 0; //counter for array
+    
+    y = 3;
+    maxriga = ((size * 2) - 1) + y;
+    while(y != size + 3){
+            x = 25 - ((size * 2) - 1); 
+            maxcol = ((size * 2) - 1) + x;
+            while(x != maxcol){
+                //if we're in a even position print a value of table 
+                if(x % 2 == 0){
+                    if(gioco[i][j] != 0)
+                        mvwprintw(new_win,y,x,"%i",gioco[i][j]);
+                    else    
+                        mvwprintw(new_win,y,x,"%c",' ');
+                }//else print a space
+                else{    
+                    mvwprintw(new_win,y,x,"%c",' ');
+                    j++;
+                }
+                wrefresh(new_win);
+                x++;
             }
-        wprintw(new_win,"\n");
-
+            j = 0;
+        
+        i++;
+        y++;
     }
-    //wrefresh(new_win);
+    wrefresh(new_win);
 }
 
 void search_zero(int **gioco,int size){
