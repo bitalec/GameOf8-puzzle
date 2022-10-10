@@ -41,7 +41,7 @@ int main (void){
         
         if(valida(table,mossa,DIM)){
             
-            //wclear(new_win); //clear the window
+            mvwprintw(new_win, 1, 1,"GIOCAAA");
             muovi(table,mossa);//moves number
             wprintw(new_win,"\n\n\n");
             stampa(table,DIM,new_win);
@@ -60,8 +60,8 @@ int main (void){
         }
     }
     
-    box(new_win,0,0);
-    mvwprintw(new_win,7,1," Complimenti Hai completato il gioco");
+    //box(new_win,0,0);
+    mvwprintw(new_win,8,1," Complimenti Hai completato il gioco");
     wgetch(new_win);
     endwin();
     return 0;

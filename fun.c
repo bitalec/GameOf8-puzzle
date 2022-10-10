@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "time.h"
+#include <time.h>
 #include <ncurses.h>
 #define DIM 3
 
@@ -14,7 +14,6 @@ struct pos_t{
 
     int r;
     int c;
-
 };
 
 
@@ -63,12 +62,12 @@ int convertimossa(int **gioco, int mossa){
 void stampa(int **gioco, int size, WINDOW * new_win){
 
     int x,y; //position of numbers
-    int maxcol = (size * 2) - 1; //ad ogni numero associamo uno spazio
-    int maxriga = (size * 2) - 1;
+    int maxcol; //number of space we need to print numbers and space(one space for one number)
     int i = 0, j = 0; //counter for array
     
-    y = 3;
-    maxriga = ((size * 2) - 1) + y;
+    //start BOLD
+    wattron(new_win,A_BOLD);
+    y = 3; //I want it start to print of the third row
     while(y != size + 3){
             x = 25 - ((size * 2) - 1); 
             maxcol = ((size * 2) - 1) + x;
@@ -93,6 +92,8 @@ void stampa(int **gioco, int size, WINDOW * new_win){
         y++;
     }
     wrefresh(new_win);
+    //stop BOLD
+    wattroff(new_win,A_BOLD);
 }
 
 void search_zero(int **gioco,int size){
@@ -148,7 +149,6 @@ int valida(int **gioco, int mossa,int size){
 
 int risolto2(int **gioco, int size){
 
-    int *pgioco = *gioco;
  
     int check = 1;
     for(int i = 0; i < size; i++){
@@ -193,12 +193,11 @@ int ** random_game3(int size){
         }
     }
 
+    //initialize finish to zero
     gioco[2][2] = 0;
 
-    
+    //shake the table
     swap(gioco, size);
-
-
 
     return gioco;
     
@@ -207,7 +206,6 @@ int ** random_game3(int size){
 void swap(int **gioco, int size){
 
     srand(time(NULL));
-
 
     int *support = malloc(sizeof(int) * (size * size));
     int count;
