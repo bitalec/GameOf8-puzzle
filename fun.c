@@ -247,8 +247,6 @@ void swap(int **gioco, int size){
         }
     }
 
-    
-
     count = n_permutazione(gioco,support, size);
 
     while(count % 2 == 1){
