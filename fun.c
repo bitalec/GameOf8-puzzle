@@ -209,7 +209,7 @@ void swap(int **gioco, int size){
 
     int *support = malloc(sizeof(int) * (size * size));
     int count;
-    struct pos_t first_casual_num, second_casual_num; //posizione dei numeri causali che andrò a generare
+    struct pos_t first_casual_num, second_casual_num; //numeri causali che andrò a generare
     int tmp;
 
     //caso in cui la tabella sia diaspari
