@@ -10,30 +10,30 @@ int main (void){
     int mossa;
     int fine = 0;
     int countm = 0;
-    FILE *fp;
+    
     WINDOW * new_win;
-    char *filename = "score.txt";
+    
     
     int **table = random_game3(DIM); //crea una matrice di dimensione variabile
     
     //open stream to score file or create if it doesn't exist
-    if(!(fp = fopen(filename,"a"))){
-        fp = fopen(filename,"w");
-    }
+    
 
     initscr(); // screen initialisation functions initialises all implementation data structures
 
     raw();
-    cbreak(); //disable line buffering, characters typed by the user are immediately available to the application
-    noecho(); //not return char on the screen
     
     new_win = newwin(10,50,7,10); //creates and returns a pointer to a new window
     keypad(new_win, TRUE); //It enables the reading of function keys like F1, F2, arrow keys etc.
     
     mvwprintw(new_win,0,1,"\n BENVENUTO NEL GIOCO DEL' 8\n\n");
-    wrefresh(new_win);
+    
     stampa(table,DIM,new_win); //print the game
     search_zero(table,DIM); //found zero position
+    
+    cbreak(); //disable line buffering, characters typed by the user are immediately available to the application
+    noecho(); //not return char on the screen
+   
     //finchè fine è uguale a zero il gioco non è finito quindi cicla
     while(!fine){
         
@@ -70,10 +70,10 @@ int main (void){
     //box(new_win,0,0);
     mvwprintw(new_win,8,1," Complimenti Hai completato il gioco");
     wgetch(new_win);
+    print_score(new_win,countm);
     endwin();
 
-    fprintf(fp,"Numero di mosse: %i\n",countm);
-    fclose(fp);
+    
 
     return 0;
 }

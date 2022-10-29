@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ncurses.h>
+#include <string.h>
 #define DIM 3
 
 
@@ -99,7 +100,6 @@ void stampa(int **gioco, int size, WINDOW * new_win){
 void search_zero(int **gioco,int size){
 
     int libero = 1;
-    
     //se posrigazero e poscolzero hanno valore -1 è la prima volta che lanciamo la funzione quindi ricerchiamo la posizione dello zero
     //altrimenti la posizione è gia stata trovata e non serve ricercarla
     if(posrigazero == -1 && poscolzero == -1){
@@ -292,16 +292,13 @@ void checkmalloc(int **gioco){
     if(gioco != NULL)
         return;
     else{    
-        
         printf("memoria non allocata");
         return exit(1);
-        
     }
 }
 
 int n_permutazione(int **gioco, int *support, int size){
 
-    
     int control1,control2;
     int count = 0;
     //controllo la parità della permutazione e salvo il valore in count
@@ -314,4 +311,33 @@ int n_permutazione(int **gioco, int *support, int size){
         }
     }
     return count;
+}
+
+void print_score(WINDOW *new_win,int count){
+    
+    nocbreak(); //enable line buffering,
+    echo(); //return char on the screen with wgetch()
+    
+    const int tot_space = 15;
+    
+    char player[10];
+    char *filename = "score.txt";
+    FILE *fp;
+
+    fp = fopen(filename,"a");
+    
+    wprintw(new_win,"Inserisci nome giocatore:");
+    wgetnstr(new_win,player,9);
+    int num_space = tot_space - strlen(player);
+    fprintf(fp,"%s",player);
+    
+    for(int i = 0; i < num_space; i++){
+        fprintf(fp," ");
+    }
+    
+    fprintf(fp,"mosse:%i\n",count);
+
+    fclose(fp);
+
+
 }
