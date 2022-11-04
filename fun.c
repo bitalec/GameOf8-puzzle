@@ -3,6 +3,7 @@
 #include <time.h>
 #include <ncurses.h>
 #include <string.h>
+#include "fun.h"
 #define DIM 3
 
 
@@ -314,17 +315,17 @@ int n_permutazione(int **gioco, int *support, int size){
 }
 
 void print_score(WINDOW *new_win,int count){
-    
+    wclear(new_win);
     nocbreak(); //enable line buffering,
     echo(); //return char on the screen with wgetch()
     
     const int tot_space = 15;
-    
+    char fs_length[27];
     char player[10];
     char *filename = "score.txt";
     FILE *fp;
 
-    fp = fopen(filename,"a");
+    fp = fopen(filename,"a+");
     
     wprintw(new_win,"Inserisci nome giocatore:");
     wgetnstr(new_win,player,9);
@@ -332,10 +333,22 @@ void print_score(WINDOW *new_win,int count){
     fprintf(fp,"%s",player);
     
     for(int i = 0; i < num_space; i++){
-        fprintf(fp," ");
+        fprintf(fp,"%c",' ');
     }
-    
     fprintf(fp,"mosse:%i\n",count);
+    
+    wclear(new_win);
+    mvwprintw(new_win,1,1,"%s\n","RECORD");
+    
+    fseek(fp,0,SEEK_SET);
+    int i = 1; 
+    while(fgets(fs_length,27,fp) != NULL && i <= 5){
+        mvwprintw(new_win,i + 1,1,"%s",fs_length);
+        i++;
+    }
+    box(new_win,0,0);
+
+    wgetch(new_win);
 
     fclose(fp);
 

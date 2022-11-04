@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include "fun.h"
-#include "fun.c"
 
 #define DIM 3
 
@@ -15,7 +14,6 @@ int main (void){
     
     
     int **table = random_game3(DIM); //crea una matrice di dimensione variabile
-    
     //open stream to score file or create if it doesn't exist
     
 
