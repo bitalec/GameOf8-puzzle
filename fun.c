@@ -19,6 +19,7 @@ struct pos_t{
 };
 
 
+
 void muovi(int **gioco, int mossa){
         
         
@@ -315,42 +316,170 @@ int n_permutazione(int **gioco, int *support, int size){
 }
 
 void print_score(WINDOW *new_win,int count){
+    
+    
     wclear(new_win);
     nocbreak(); //enable line buffering,
     echo(); //return char on the screen with wgetch()
+    struct player_t *newplayer = malloc(sizeof(struct player_t));
+    struct player_t *allplayer = NULL;
+    char name[10];
+    int point = count;
     
-    const int tot_space = 15;
-    char fs_length[27];
-    char player[10];
-    char *filename = "score.txt";
-    FILE *fp;
+    
+    wprintw(new_win,"%s","INSERISCI NOME GIOCATORE:");
+    wscanw(new_win,"%9s", newplayer->name); //nome del giocatore
+    newplayer->point = count;   //punteggio del giocatore
+    newplayer ->nextplayer = NULL;
+    
+    //new list with points and names of player
+    allplayer = new_list(allplayer,newplayer);
 
-    fp = fopen(filename,"a+");
-    
-    wprintw(new_win,"Inserisci nome giocatore:");
-    wgetnstr(new_win,player,9);
-    int num_space = tot_space - strlen(player);
-    fprintf(fp,"%s",player);
-    
-    for(int i = 0; i < num_space; i++){
-        fprintf(fp,"%c",' ');
-    }
-    fprintf(fp,"mosse:%i\n",count);
-    
-    wclear(new_win);
-    mvwprintw(new_win,1,1,"%s\n","RECORD");
-    
-    fseek(fp,0,SEEK_SET);
-    int i = 1; 
-    while(fgets(fs_length,27,fp) != NULL && i <= 5){
-        mvwprintw(new_win,i + 1,1,"%s",fs_length);
-        i++;
-    }
-    box(new_win,0,0);
+    if(allplayer != newplayer)
+        allplayer = insert_player(allplayer,newplayer);
 
+    
+  /*  while(allplayer != NULL){
+        wprintw(new_win,"%s", allplayer -> name);
+        allplayer = allplayer -> nextplayer;
+    }*/
+   
     wgetch(new_win);
 
-    fclose(fp);
+};
+
+struct player_t *new_list(struct player_t *allplayer,struct player_t *newplayer){
+
+
+    FILE *fp = fopen("Score.txt", "a+");
+    char fs_s[30];
+    char name[10];
+    struct player_t *node;
+    //Se il file è vuoto ritorna l'unico giocatore;
+    if(fgets(fs_s,28,fp) == NULL){
+       return newplayer;
+    }
+    else{
+        int i;
+        int n;
+        int points = 0;
+        
+        struct player_t *cursor = allplayer; //cursore della lista
+        
+        do{
+            node = malloc(sizeof(struct player_t)); //inizializzo un nuovo nodo
+            node -> nextplayer = NULL;
+            n = 1;
+            
+            //prendo il nome dell'utente, si ferma al primo spazio
+            for(i=0; *(fs_s + i) != ' '; i++)
+                node -> name[i] = *(fs_s+i); 
+            
+            //salto tutti i caratteri fino ad arrivare al punteggio
+            while(*(fs_s + i) < '0' || *(fs_s + i) > '9')
+                i++;
+
+            //inizializzo il punteggio
+            //numero in base 10, n mi indica la posizione della cifra che andrò a salvare
+            while(*(fs_s + i) != '\n'){
+                if(*(fs_s + i) != '0')
+                    node -> point += (*(fs_s + i) - '0') * n;
+                else
+                    node -> point *= 10;
+                
+                n *= 10;
+                i++;
+            }    
+            
+            //se la lista è vuota salvo la lista punta al primo e unico giocatore
+            if(allplayer == NULL){
+                allplayer = node;
+            }
+            else{
+                cursor = allplayer;
+                //altrimenti vado alla fine della lista e salvo l'ultimo giocatore
+                while(cursor -> nextplayer != NULL){
+                    cursor = cursor -> nextplayer;
+                }
+                cursor -> nextplayer = node;
+            }
+
+
+        }while(fgets(fs_s,28,fp) != NULL); //continua fino a che ci sono giocatori
+
+        
+    }
+        
+        return allplayer;
+
+
+};
+
+struct player_t *insert_player(struct player_t *allplayer,struct player_t *newplayer){
+
+    bool flag = 0;
+    struct player_t *copy = allplayer;
+    struct player_t *prec;
+    
+        if(newplayer-> point < allplayer -> point){
+            
+            newplayer -> nextplayer = allplayer;
+            allplayer = newplayer;
+            
+            return allplayer;
+        
+        }
+        else{
+            
+            while(!flag){
+                
+                flag = (allplayer == NULL) ? 1 : 0;
+                
+                if(!flag)
+                    if(newplayer -> point > allplayer -> point){
+                    
+                        prec = allplayer;
+                        allplayer = allplayer -> nextplayer;
+                    
+                    }else flag = 1;
+            }
+
+            prec -> nextplayer = newplayer;
+            newplayer -> nextplayer = allplayer;
+
+            return copy;
+        }
+            
+        
+}
+
+
+int ** test_game(void){
+
+    int size = 3;
+
+    int **gioco = (int **)malloc(sizeof(int*) * size);
+    checkmalloc(gioco);
+    
+    for(int i = 0; i < size; i++){
+        gioco[i] = (int*)malloc(sizeof(int) * size); 
+        if(gioco[i]==NULL){
+            printf("memoria non allocata");
+            exit(1);
+        }
+    }
+
+    int k = 1;
+    for(int i = 0; i < size; i++){
+        for(int j = 0; j < size; j++){
+            gioco[i][j] = k;
+            k++; 
+        }
+    }
+
+    gioco[2][2] = 0;
+
+    return gioco;
 
 
 }
