@@ -13,9 +13,8 @@ int main (void){
     WINDOW * new_win;
     
     
-   // int **table = random_game3(DIM); //crea una matrice di dimensione variabile
-    //open stream to score file or create if it doesn't exist
-    int **table = test_game();
+    int **table = random_game3(DIM); //crea una matrice di dimensione variabile
+    
 
     initscr(); // screen initialisation functions initialises all implementation data structures
 

@@ -24,10 +24,10 @@ int n_permutazione(int **gioco, int *support,int size);
 void print_score(WINDOW *new_win,int count);
 int ** random_game3(int size);
 int risolto2(int **gioco, int size);
-struct player_t *new_list(struct player_t *all_player, struct player_t *player);
+struct player_t *new_list(FILE *fp,struct player_t *all_player, struct player_t *player);
 struct player_t *insert_player(struct player_t *allplayer,struct player_t *newplayer);
 
-int ** test_game(void);
+//int ** test_game(void); test
 
 
 #endif                          

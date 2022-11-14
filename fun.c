@@ -325,7 +325,7 @@ void print_score(WINDOW *new_win,int count){
     struct player_t *allplayer = NULL;
     char name[10];
     int point = count;
-    
+    FILE *fp = fopen("Score.txt", "a+");
     
     wprintw(new_win,"%s","INSERISCI NOME GIOCATORE:");
     wscanw(new_win,"%9s", newplayer->name); //nome del giocatore
@@ -333,25 +333,36 @@ void print_score(WINDOW *new_win,int count){
     newplayer ->nextplayer = NULL;
     
     //new list with points and names of player
-    allplayer = new_list(allplayer,newplayer);
+    allplayer = new_list(fp,allplayer,newplayer);
 
     if(allplayer != newplayer)
         allplayer = insert_player(allplayer,newplayer);
 
+    fclose(fp);
+
+    fp = fopen("Score.txt","w");
     
+    while(allplayer != NULL){
+        
+        fprintf(fp,"%s   mosse:%i\n", allplayer->name, allplayer -> point);
+        wprintw(new_win,"%s   mosse:%i\n", allplayer -> name, allplayer -> point);
+        
+        allplayer = allplayer -> nextplayer;
+    
+    }
   /*  while(allplayer != NULL){
         wprintw(new_win,"%s", allplayer -> name);
         allplayer = allplayer -> nextplayer;
     }*/
-   
+    fclose(fp);
     wgetch(new_win);
 
 };
 
-struct player_t *new_list(struct player_t *allplayer,struct player_t *newplayer){
+struct player_t *new_list(FILE *fp,struct player_t *allplayer,struct player_t *newplayer){
 
 
-    FILE *fp = fopen("Score.txt", "a+");
+    
     char fs_s[30];
     char name[10];
     struct player_t *node;
@@ -453,8 +464,8 @@ struct player_t *insert_player(struct player_t *allplayer,struct player_t *newpl
         
 }
 
-
-int ** test_game(void){
+//test
+/*int ** test_game(void){
 
     int size = 3;
 
@@ -482,4 +493,4 @@ int ** test_game(void){
     return gioco;
 
 
-}
+}*/
