@@ -1,6 +1,7 @@
 # game of 8 
 It's a simple game write in C using ncurses library.
 
+
 ## Requirements
 
 ### Installing ncurses library
