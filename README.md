@@ -1,5 +1,6 @@
 # game of 8 
 A simple puzzle game written in C, using the ncurses library for text-based graphics.
+⚠️ Please note: these projects are not intended as useful products. They are exercises to test and expand my skills, as well as to deepen my knowledge in various areas of computer science.
 
 ![Screenshot](game.png)
 
